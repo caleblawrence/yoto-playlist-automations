@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    /* Basic Options */
+    "target": "ES2022", // Or newer (e.g., ESNext). Target modern Node.js features.
+    "module": "NodeNext", // VERY IMPORTANT for modern Node.js ESM support!
+    "lib": ["ES2022"], // Include modern JS library features
+    "allowJs": true, // Allow mixing .js and .ts files if needed
+    "checkJs": false, // Don't type-check JS files by default
+    "outDir": "./dist", // Where compiled JS files will go
+    "rootDir": "./src", // Where your source TS files are located
+
+    /* Strict Type-Checking Options */
+    "strict": true, // Enable all strict type-checking options (recommended)
+
+    /* Module Resolution Options */
+    "moduleResolution": "NodeNext", // VERY IMPORTANT - Use Node's modern resolution strategy
+    // "baseUrl": "./", // Often useful for path aliases
+    // "paths": {}, // Define path aliases if using baseUrl
+
+    /* Advanced Options */
+    "resolveJsonModule": true, // Allow importing JSON files
+    "esModuleInterop": true, // Enables compatibility between CommonJS and ES Modules
+    "forceConsistentCasingInFileNames": true, // Prevent inconsistencies
+    "skipLibCheck": true // Skip type checking of declaration files (speeds up compile)
+  },
+  "include": ["src/**/*"], // Which files TypeScript should process
+  "exclude": ["node_modules", "dist"] // Which files/folders to ignore
+}
