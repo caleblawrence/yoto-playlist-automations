@@ -1,5 +1,6 @@
-const { Client } = require("@notionhq/client");
+import { Client } from "@notionhq/client";
 import "dotenv/config";
+import { exec } from "child_process";
 
 const notion = new Client({
   auth: process.env.NOTION_TOKEN,
@@ -7,11 +8,11 @@ const notion = new Client({
 
 const databaseId = process.env.NOTION_DATABASE_ID;
 
-const getLinks = async () => {
+const getMediaLinks = async () => {
   const links = [];
   try {
     const response = await notion.databases.query({
-      database_id: databaseId,
+      database_id: databaseId as string,
       filter: {
         property: "Status",
         status: {
@@ -21,6 +22,7 @@ const getLinks = async () => {
     });
 
     for (const page of response.results) {
+      // @ts-ignore
       const link = page.properties.link.rich_text[0].plain_text;
       links.push(link);
     }
@@ -33,8 +35,24 @@ const getLinks = async () => {
 
 const fetchAndLogLinks = async () => {
   try {
-    const links = await getLinks();
-    console.log("Fetched links:", links);
+    const links = await getMediaLinks();
+    for (const link of links) {
+      exec(
+        `./yt-dlp '${link}' --extract-audio --audio-format mp3 --no-check-certificate --output "downloads/%(title)s.%(ext)s"`,
+        (err, stdout, stderr) => {
+          if (err) {
+            console.error("Error executing yt-dlp:", err);
+            return;
+          }
+
+          if (stderr) {
+            console.error("yt-dlp stderr:", stderr);
+          }
+
+          console.log("yt-dlp output:", stdout);
+        }
+      );
+    }
   } catch (error) {
     console.error("Error fetching links:", error);
   }
