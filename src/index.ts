@@ -1,6 +1,9 @@
 import { Client } from "@notionhq/client";
 import "dotenv/config";
 import { downloadFile } from "./fileDownloader";
+import { getPresignedUrl } from "./yoto";
+import axios from "axios";
+import { shouldUploadToYoto } from "./featureFlags";
 
 const notion = new Client({
   auth: process.env.NOTION_TOKEN,
@@ -13,6 +16,8 @@ const getMediaLinks = async () => {
   try {
     const response = await notion.databases.query({
       database_id: databaseId as string,
+      // this is the property name in your Notion database and will differ
+      // depending on your database setup
       filter: {
         property: "Status",
         status: {
@@ -37,10 +42,28 @@ const getLinksAndDownload = async () => {
   try {
     const links = await getMediaLinks();
     for (const link of links) {
-      downloadFile(link);
+      const fileContent = await downloadFile(link);
+
+      if (shouldUploadToYoto()) {
+        console.log("Uploading to Yoto...");
+        const presignedUrl = await getPresignedUrl(
+          link,
+          link.split("/").pop() || "unknown.mp3"
+        );
+
+        const uploadUrl = presignedUrl.upload.uploadUrl;
+
+        await axios.put(uploadUrl, fileContent, {
+          headers: {
+            "Content-Type": "application/octet-stream",
+          },
+        });
+
+        console.log("File uploaded to S3 successfully.");
+      }
     }
   } catch (error) {
-    console.error("Error fetching links:", error);
+    console.error("Error fetching links or uploading files:", error);
   }
 };
 
