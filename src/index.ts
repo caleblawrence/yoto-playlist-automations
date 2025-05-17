@@ -44,6 +44,9 @@ const getLinksAndDownload = async () => {
     for (const link of links) {
       const fileContent = await downloadFile(link);
 
+      // NOTE: this is not fully implemented yet. It does get the file into s3
+      // but it doesn't show up on the Yoto playlist yet. See the README for
+      // more details.
       if (shouldUploadToYoto()) {
         console.log("Uploading to Yoto...");
         const presignedUrl = await getPresignedUrl(
