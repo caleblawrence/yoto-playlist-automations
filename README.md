@@ -1,6 +1,14 @@
 # yoto-playlist-automations
 
-This application processes a list of media links (such as Youtube videos) and downloads each file to a folder so it can be uploaded on a DIY Yoto card (A Yoto is a low tech kids music player and you can make custom Yoto cards with your own files). Notion makes it easy to have a running todo list of songs or other items to put on a card and this automation conveniently downloads each file and converts it to an mp3 for you.
+This application processes a list of media links (such as Youtube videos) and downloads each file to a folder so it can be uploaded on a DIY Yoto card (A Yoto is a low tech kids music player and you can make custom Yoto cards with your own files). Notion makes it easy to have a running todo list of songs or other items to put on a card and this automation conveniently downloads each file and converts it to an mp3 for you when you're ready to add a batch to a Yoto playlist.
+
+### Go from this
+
+![Notion table with links](docs/notion-table.png)
+
+### To downloaded mp3 files
+
+![Downloaded files](docs/downloaded-files.png)
 
 ### Steps to run locally
 
